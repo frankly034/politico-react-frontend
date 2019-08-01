@@ -31,7 +31,7 @@ class Signup extends Component {
         if (res.error) {
           return notifyToast(res.error, { type: 'error' });
         }
-        const path = res.status === 200 && res.data.data.user.isAdmin ? '/admin' : '/user';
+        const path = res.status === 200 && res.data.data.user.isAdmin ? '/parties' : '/parties';
         return history.push(path);
       } catch (err) {
         return notifyToast(err, { type: 'error' });

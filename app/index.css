@@ -33,6 +33,10 @@ html, body, .wrapper, #app {
   flex-direction: column-reverse;
 }
 
+.flex-align-center {
+  align-items: center;
+}
+
 .flex-center {
   justify-content: center;
 }
@@ -452,6 +456,7 @@ form {
 
 .button {
   border-style: none;
+  display: inline-block;
   background-color: #ECF0F1;
   border: 1px #2980B9 solid;
   padding: 0.5rem 1rem;
@@ -544,12 +549,12 @@ a {
   color: #2C3E50;
 }
 
-.nav-stack a:hover {
+.nav-stack a:hover, .nav-stack a.active {
   background-color: #3498DB;
   color: #ECF0F1;
 }
 
-.nav-stack li:hover{
+.nav-stack li:hover, .nav-stack li a.active{
   border: 0;
   border-bottom: solid 1px #ECF0F1;
   margin-bottom: 0.5rem;
@@ -589,10 +594,11 @@ a {
 .card-row {
   display:flex;
   flex-direction: row;
+  width: 25%;
 }
 
 .card-row .card-50{
-  flex:1;
+  flex: 1;
 }
 
 .card-row .card-body .card-text{
@@ -666,6 +672,16 @@ a {
 
 /* --- Responsive Feature --- */
 
+@media screen and (min-width: 360px) {
+  .card-row {
+    width: 92%;
+  }
+
+  .button {
+    font-size: 0.8rem;
+  }
+}
+
 @media screen and (min-width: 768px) {
   .flex-row {
       display: flex;
@@ -682,54 +698,57 @@ a {
   }
 
   .border-light-r-lg-1{
-      border-right: #ECF0F1 solid 1px;
+    border-right: #ECF0F1 solid 1px;
   }
   
   .border-danger-r-lg-1 {
-      border-right: #E74C3C solid 1px;
+    border-right: #E74C3C solid 1px;
   }
   
   .border-dark-r-lg-1 {
-      border-right: #2C3E50 solid 1px;
+    border-right: #2C3E50 solid 1px;
   }
   
   .border-primary-r-lg-1 {
-      border-right: #3498DB solid 1px;
+    border-right: #3498DB solid 1px;
   }
   
   .border-light-l-lg-1{
-      border-left: #ECF0F1 solid 1px;
+    border-left: #ECF0F1 solid 1px;
   }
   
   .border-danger-l-lg-1 {
-      border-left: #E74C3C solid 1px;
+    border-left: #E74C3C solid 1px;
   }
   
   .border-dark-l-lg-1 {
-      border-left: #2C3E50 solid 1px;
+    border-left: #2C3E50 solid 1px;
   }
   
   .border-primary-l-lg-1 {
-      border-left: #3498DB solid 1px;
+    border-left: #3498DB solid 1px;
   }
 
   nav .toggler {
-      display: none;
+    display: none;
   }
 
   .nav.nav-stack{
-      display: block !important;
+    display: block !important;
+    font-size: 0.9rem;
   }
 
   .card-group-row-2{
-      display: flex;
-      flex-direction: row;
-      flex: 50% 1;
-      justify-content: space-around;
-      flex-wrap: wrap;
+    display: flex;
+    flex-direction: row;
+    flex: 50% 1;
+    justify-content: space-around;
+    flex-wrap: wrap;
   }
 
-
+  .card-row {
+    width: 45%;
+  }
 
   .modal form {
       width: 50%;
@@ -741,4 +760,3 @@ a {
   
       
 }
-

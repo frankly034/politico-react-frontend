@@ -10,7 +10,7 @@ import {
 } from './types';
 
 const instance = axios.create({
-  baseURL: 'https://politico034.herokuapp.com/api/v1/auth',
+  baseURL: 'api/v1/auth',
 });
 
 export const signupError = error => ({
@@ -54,8 +54,9 @@ export const login = data => (dispatch) => {
       return res;
     })
     .catch((error) => {
-      dispatch(loginError(error.response.data.error));
-      return error.response.data;
+      const err = error instanceof Error ? error.message : error.response.data.error;
+      dispatch(loginError(err));
+      throw new Error(err);
     });
 };
 

@@ -8,10 +8,10 @@ import {
   SIGNIN_UP,
 } from '../actions/types';
 
-const user = localStorage.getItem('politicoUser');
+const user = JSON.parse(localStorage.getItem('politicoUser'));
 
 const initialState = {
-  user: user ? { user } : {},
+  user: user || {},
   isAuthenticated: !!localStorage.getItem('politicoToken'),
   errors: [],
   loginIn: false,
@@ -55,6 +55,7 @@ export default (state = initialState, action) => {
     case LOGOUT_REQUEST:
       return {
         ...state,
+        isAuthenticated: false,
       };
 
     case SIGNUP_ERROR:
