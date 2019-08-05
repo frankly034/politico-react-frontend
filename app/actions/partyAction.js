@@ -1,4 +1,5 @@
-import axios from 'axios';
+import instance from '../helpers/axios';
+
 import {
   GETTING_PARTIES,
   PARTIES_REQUEST,
@@ -11,14 +12,14 @@ import {
   DELETE_PARTY_ERROR,
   EDITING_PARTY,
   EDIT_PARTY_REQUEST,
+  EDIT_PARTY_ERROR,
 } from './types';
 
-const instance = axios.create({
-  baseURL: 'api/v1',
-  headers: {
-    'x-auth': localStorage.getItem('politicoToken'),
-  },
-});
+instance.interceptors.request.use((config) => {
+  const apiToken = localStorage.getItem('politicoToken');
+  config.headers = { 'x-auth': apiToken };
+  return config;
+}, error => Promise.reject(error));
 
 export const fetchPartyError = err => ({
   type: FETCH_PARTY_ERROR,
@@ -35,6 +36,11 @@ export const deletePartyError = err => ({
   payload: err,
 });
 
+export const editPartyError = err => ({
+  type: EDIT_PARTY_ERROR,
+  payload: err,
+});
+
 export const fetchParties = () => (dispatch) => {
   dispatch({ type: GETTING_PARTIES });
   return instance.get('/parties')
@@ -48,7 +54,6 @@ export const fetchParties = () => (dispatch) => {
     .catch((error) => {
       const err = error instanceof Error ? error.message : error.response.data.error;
       dispatch(fetchPartyError(err));
-      console.log(Object.keys(err));
       throw new Error(err);
     });
 };
@@ -81,7 +86,7 @@ export const deleteParty = id => (dispatch) => {
     .then((res) => {
       dispatch({
         type: DELETE_PARTY_REQUEST,
-        payload: id,
+        payload: res.data.data.party.id,
       });
       return res;
     })

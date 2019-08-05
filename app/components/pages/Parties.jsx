@@ -19,67 +19,58 @@ class Parties extends Component {
     this.state = {
       deleteModalState: false,
       editModalState: false,
-      selectedParty: '',
-      selectedPartyId: 0,
-      selectedHqAddress: '',
+      name: '',
+      hqAddress: '',
       party: {},
     };
 
     this.onDeleteModal = (e) => {
       e.preventDefault();
-      this.setState({
-        deleteModalState: true,
-        selectedParty: e.target.name,
-        selectedPartyId: Number(e.target.id),
-      });
+      this.selectParty(e.target.id, 'deleteModalState');
     };
 
     this.onEditModal = (e) => {
       e.preventDefault();
-      const { parties } = this.props;
-      const selectedParty = parties.filter(party => party.id !== e.target.id).shift();
-      this.setState({
-        editModalState: true,
-        selectedParty: e.target.name,
-        party: selectedParty,
-      });
+      this.selectParty(e.target.id, 'editModalState');
     };
 
     this.onDelete = async (e) => {
       e.preventDefault();
-      const { deleteParty } = this.props;
-      const { selectedPartyId, selectedParty } = this.state;
-      const res = await deleteParty(selectedPartyId);
+      const { remove } = this.props;
+      const { party } = this.state;
+      const res = await remove(party.id);
       if (res.status === 200) {
-        notifyToast(`${selectedParty} successfully deleted.`, { type: 'success' });
+        notifyToast(`${party.name} successfully deleted.`, { type: 'success' });
       }
       this.setState({
         deleteModalState: false,
-        selectedParty: '',
+        party: {},
       });
     };
 
-    this.onCancel = (e) => {
-      e.preventDefault();
+    this.onCancel = () => {
       this.setState({
         deleteModalState: false,
         editModalState: false,
-        selectedParty: '',
+        party: {},
       });
     };
 
     this.onEdit = async (e) => {
       e.preventDefault();
-      const { editParty } = this.props;
+      const { edit } = this.props;
       const { name, hqAddress, party } = this.state;
-      const partyData = { name, hqAddress, party };
+      const partyData = { name, hqAddress, id: party.id };
       try {
-        const res = await editParty(partyData);
+        const res = await edit(partyData);
         if (res.error) {
+          this.onCancel();
           return notifyToast(res.error, { type: 'error' });
         }
+        this.onCancel();
         return notifyToast('Edited party successfully', { type: 'success' });
       } catch (err) {
+        this.onCancel();
         return notifyToast(err.message, { type: 'error' });
       }
     };
@@ -89,15 +80,22 @@ class Parties extends Component {
         [e.target.name]: e.target.value,
       });
     };
+
+    this.selectParty = (id, modal) => {
+      const { parties } = this.props;
+      const selectedParty = parties.filter(party => party.id === Number(id)).shift();
+      this.setState({
+        [modal]: true,
+        party: selectedParty,
+        name: selectedParty.name,
+        hqAddress: selectedParty.hqAddress,
+      });
+    };
   }
 
-  async componentWillMount() {
-    const { fetchParties, parties, fetchingParties } = this.props;
-    await fetchParties();
-    if (parties.length === 0 && fetchingParties === false) {
-      notifyToast('No parties to show at the moment', { type: 'info' });
-    }
-    return false;
+  async componentDidMount() {
+    const { fetch } = this.props;
+    await fetch();
   }
 
   render() {
@@ -111,18 +109,17 @@ class Parties extends Component {
     const {
       deleteModalState,
       editModalState,
-      selectedParty,
-      selectedPartyId,
       party,
+      hqAddress,
+      name,
     } = this.state;
     return (
       <Fragment>
         <DeleteModal
           active={deleteModalState}
-          name={selectedParty}
+          item={{ ...party }}
           onCancel={this.onCancel}
           onDelete={this.onDelete}
-          id={selectedPartyId}
           state={deletingParty}
         />
         <EditModal
@@ -130,8 +127,10 @@ class Parties extends Component {
           onCancel={this.onCancel}
           onEdit={this.onEdit}
           state={editingParty}
-          party={party}
+          name={name}
+          hqAddress={hqAddress}
           onChange={this.onChange}
+          party={party}
         />
         <div className="flex-col wrapper">
           <Header user={user} />
@@ -155,21 +154,22 @@ class Parties extends Component {
                       && <Loader type="ThreeDots" color="#2C3E50" height={80} width={80} />
                   }
                   {
-                    parties.length ? parties.map(
-                      party => (
-                        <Card
-                          id={party.id}
-                          title={party.name}
-                          text={party.hqAddress}
-                          url={party.logoUrl}
-                          user={user}
-                          key={party.id}
-                          onDeleteModal={this.onDeleteModal}
-                          onEditModal={this.onEditModal}
-                          address={party.hqAddress}
-                        />
-                      ),
-                    )
+                    parties.length
+                      ? parties.map(
+                        currentParty => (
+                          <Card
+                            id={currentParty.id}
+                            title={currentParty.name}
+                            text={currentParty.hqAddress}
+                            url={currentParty.logoUrl}
+                            user={user}
+                            key={currentParty.id}
+                            onDeleteModal={this.onDeleteModal}
+                            onEditModal={this.onEditModal}
+                            address={currentParty.hqAddress}
+                          />
+                        ),
+                      )
                       : null
                   }
                 </section>
@@ -184,9 +184,9 @@ class Parties extends Component {
 }
 
 Parties.propTypes = {
-  fetchParties: PropTypes.func.isRequired,
-  deleteParty: PropTypes.func.isRequired,
-  editParty: PropTypes.func.isRequired,
+  fetch: PropTypes.func.isRequired,
+  remove: PropTypes.func.isRequired,
+  edit: PropTypes.func.isRequired,
   fetchingParties: PropTypes.bool.isRequired,
   deletingParty: PropTypes.bool.isRequired,
   editingParty: PropTypes.bool.isRequired,
@@ -211,8 +211,8 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   {
-    fetchParties,
-    deleteParty,
-    editParty,
+    fetch: fetchParties,
+    remove: deleteParty,
+    edit: editParty,
   },
 )(withRouter(Parties));

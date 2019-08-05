@@ -10,6 +10,7 @@ import {
   DELETE_PARTY_ERROR,
   EDITING_PARTY,
   EDIT_PARTY_REQUEST,
+  EDIT_PARTY_ERROR,
 } from '../actions/types';
 
 const initialState = {
@@ -36,7 +37,6 @@ export default (state = initialState, action) => {
         ...state,
         errors: [],
         deletingParty: true,
-        parties: state.parties.filter(party => party.id === action.payload),
       };
 
     case EDITING_PARTY:
@@ -51,7 +51,7 @@ export default (state = initialState, action) => {
         ...state,
         errors: [],
         parties: state.parties
-          .filter(party => party.id === action.payload.id)
+          .filter(party => party.id !== action.payload.id)
           .concat(action.payload),
         editingParty: false,
       };
@@ -85,17 +85,20 @@ export default (state = initialState, action) => {
         party: action.payload,
         errors: [],
         deletingParty: false,
+        parties: state.parties.filter(party => party.id !== action.payload),
       };
 
     case FETCH_PARTY_ERROR:
     case CREATE_PARTY_ERROR:
     case DELETE_PARTY_ERROR:
+    case EDIT_PARTY_ERROR:
       return {
         ...state,
         errors: action.payload,
         fetchingParties: false,
         creatingParty: false,
         deletingParty: false,
+        editingParty: false,
       };
 
     default: return state;

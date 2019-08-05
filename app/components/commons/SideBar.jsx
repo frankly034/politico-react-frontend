@@ -20,11 +20,11 @@ class SideBar extends Component {
             Menu
           </button>
           <ul className="nav nav-stack" id="mynav">
-            <li><NavLink to="/parties">Parties</NavLink></li>
-            <li><Link to="office.html">Offices</Link></li>
-            <li><Link to="profile.html">My Candidates</Link></li>
-            <li><Link to="apply.html">Run for Offices</Link></li>
-            <li><Link to="/" onClick={signout}>Logout</Link></li>
+            <li><NavLink to="/parties" exact>Parties</NavLink></li>
+            <li><NavLink to="#" exact>Offices</NavLink></li>
+            <li><NavLink to="#" exact>My Candidates</NavLink></li>
+            <li><NavLink to="#" exact>Run for Offices</NavLink></li>
+            <li><NavLink to="/" exact onClick={signout}>Logout</NavLink></li>
           </ul>
         </nav>
       </section>

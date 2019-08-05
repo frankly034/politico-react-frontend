@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Loader from 'react-loader-spinner';
 
 const Modal = ({
-  name,
+  item,
   active,
   onCancel,
   onDelete,
@@ -15,7 +15,7 @@ const Modal = ({
       <form className="mr-3 bg-light-theme">
         <h3 className="face-300 font-md page-title">Delete Party</h3>
         <p className="font-md face-300 dark my-3">
-          { `Are you sure you want to DELETE ${name}?` }
+          { `Are you sure you want to DELETE ${item.name}?` }
         </p>
         <div>
           <button type="button" className="button button-primary" onClick={onDelete}>
@@ -32,7 +32,7 @@ const Modal = ({
 );
 
 Modal.propTypes = {
-  name: PropTypes.string.isRequired,
+  item: PropTypes.object.isRequired,
   active: PropTypes.bool.isRequired,
   onCancel: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
