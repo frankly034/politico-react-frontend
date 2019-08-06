@@ -1,3 +1,5 @@
+https://www.travis-ci.org/frankly034/politico-react-frontend.svg?branch=develop
+
 # politico-react-frontend
 
 ## About
@@ -32,3 +34,4 @@ After that start or build the application by running
 ```
 ## Contributors
 - Ugege Lewis
+```
