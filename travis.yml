@@ -9,9 +9,6 @@ install:
 script:
 - npm test -- -u --coverage
 - npm run build
-before_script:
-- chmod +x ./cc-test-reporter
-- "./cc-test-reporter before-build"
+
 after_script:
-- "./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT"
 - npm run coveralls
