@@ -1,4 +1,5 @@
-https://www.travis-ci.org/frankly034/politico-react-frontend.svg?branch=develop
+[![Build Status](https://www.travis-ci.org/frankly034/politico-react-frontend.svg?branch=develop)](https://www.travis-ci.org/frankly034/politico-react-frontend)
+
 
 # politico-react-frontend
 

@@ -10,7 +10,8 @@
     "start:dev": "webpack-dev-server --open",
     "start": "node app.js",
     "build": "rm -rf dist && webpack --mode production",
-    "heroku-postbuild": "npm run build"
+    "heroku-postbuild": "npm run build",
+    "coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls"
   },
   "repository": {
     "type": "git",
@@ -44,6 +45,7 @@
     "@babel/preset-env": "^7.4.5",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.6",
+    "coveralls": "^3.0.5",
     "css-loader": "^3.0.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
